@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#3F3F3F">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnDevice"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="320dp"
+            android:background="@drawable/home_button_1"
+            android:drawableStart="@drawable/device_small"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/round_let"
+            android:hint="Устройства"
+            android:paddingLeft="8dp"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btnPet"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/home_button_1"
+            android:drawableStart="@drawable/paw_small"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/round_let"
+            android:hint="Питомцы"
+            android:paddingLeft="8dp"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <ImageButton
+            android:id="@+id/btnHome"
+            android:layout_width="16dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:layout_weight="1"
+            android:src="@drawable/home_small"
+            android:scaleType="fitCenter"
+            android:contentDescription="Кнопка пользователя"/>
+
+        <ImageButton
+            android:id="@+id/btnUser"
+            android:layout_width="16dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:src="@drawable/user_small"
+            android:scaleType="fitCenter"
+            android:contentDescription="Кнопка пользователя"/>
+    </LinearLayout>
+</LinearLayout>

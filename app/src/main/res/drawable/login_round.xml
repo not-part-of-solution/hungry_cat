@@ -1,0 +1,9 @@
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#791c45"> <!-- Цвет ripple-эффекта -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFC1D7"/> <!-- Цвет фона -->
+            <corners android:radius="24dp"/> <!-- Закругление углов -->
+        </shape>
+    </item>
+</ripple>

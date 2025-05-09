@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#3F3F3F"
+    android:gravity="center">
+    <!--поле для ввода имени пользователя-->
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/field_input"
+        android:fontFamily="@font/round_let"
+        android:hint="Имя пользователя"
+        android:padding="16dp"
+        android:textSize="24sp" />
+    <!--поле для ввода почты-->
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/field_input"
+        android:fontFamily="@font/round_let"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:padding="16dp"
+        android:textSize="24sp" />
+    <!--поле для ввода пароль-->
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/field_input"
+        android:fontFamily="@font/round_let"
+        android:hint="Пароль"
+        android:inputType="textPassword"
+        android:padding="16dp"
+        android:textSize="24sp" />
+    <!--поле для подтверждения пароля-->
+    <EditText
+        android:id="@+id/etConfirmPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/field_input"
+        android:fontFamily="@font/round_let"
+        android:hint="Подтвердите пароль"
+        android:inputType="textPassword"
+        android:padding="16dp"
+        android:textSize="24sp" />
+
+    <!--Рисуем кнопочку регистрации-->
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/round_button_field"
+        android:clickable="true"
+        android:fontFamily="@font/touraine_bold"
+        android:padding="16dp"
+        android:text="Зарегистрироваться"
+        android:textColor="#791c45"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvLogin"
+        android:layout_width="372dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/login_round"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/round_let"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="Уже есть аккаунт? Войти "
+        android:textColor="#791c45"
+        android:textColorLink="#791c45"
+        android:textSize="24sp" />
+</LinearLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#3F3F3F"
+    android:gravity="center_horizontal"> <!-- Центрирование по горизонтали -->
+
+    <!-- Пустой View с весом для смещения изображения вверх -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:id="@+id/lapka"
+        android:layout_width="145dp"
+        android:layout_height="114dp"
+        android:contentDescription="Картинка"
+        android:scaleType="fitCenter"
+        android:src="@drawable/lapka" />
+
+    <Button
+        android:id="@+id/button_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Перейти к регистрации"
+        android:fontFamily="@font/touraine_bold"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/round_button_field"
+        android:paddingVertical="12dp"
+        android:layout_marginTop="16dp" /> <!-- Отступ сверху для кнопки -->
+
+    <!-- Еще один пустой View для баланса (необязательно) -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>

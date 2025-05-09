@@ -1,0 +1,7 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/dinamic"
+        android:width="44dp"
+        android:height="44dp"
+        android:gravity="center" />
+</layer-list>

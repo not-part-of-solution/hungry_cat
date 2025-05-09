@@ -1,0 +1,7 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/bone"
+        android:width="40dp"
+        android:height="38dp"
+        android:gravity="center" />
+</layer-list>
