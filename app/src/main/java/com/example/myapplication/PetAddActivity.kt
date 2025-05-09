@@ -49,6 +49,7 @@ class PetAddActivity : AppCompatActivity() {
 
     // UI элементы
     private lateinit var etName: EditText
+    private lateinit var etValue: EditText
     private lateinit var etRoom: EditText
     private lateinit var etLink: EditText
     private lateinit var rvFeedingTimes: RecyclerView
@@ -70,6 +71,7 @@ class PetAddActivity : AppCompatActivity() {
 
     private fun initViews() {
         etName = findViewById(R.id.etName)
+        etValue = findViewById(R.id.etValue)
         etRoom = findViewById(R.id.etRoom)
         etLink = findViewById(R.id.etLink)
         rvFeedingTimes = findViewById(R.id.rvFeedingTimes)
@@ -146,6 +148,7 @@ class PetAddActivity : AppCompatActivity() {
     private fun savePet() {
         when {
             etName.text.isEmpty() -> etName.error = "Введите имя"
+            etValue.text.isEmpty() -> etValue.error = "Введите вес"
             etRoom.text.isEmpty() -> etRoom.error = "Введите комнату"
             feedingTimes.isEmpty() -> Toast.makeText(this, "Добавьте время кормления", Toast.LENGTH_SHORT).show()
             else -> {

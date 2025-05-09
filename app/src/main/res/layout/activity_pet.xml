@@ -50,6 +50,18 @@
         android:textSize="20sp" />
 
     <EditText
+        android:id="@+id/etValue"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/field_input"
+        android:fontFamily="@font/round_let"
+        android:hint="Вес питомца"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textSize="20sp" />
+
+    <EditText
         android:id="@+id/etRoom"
         android:layout_width="match_parent"
         android:layout_height="56dp"

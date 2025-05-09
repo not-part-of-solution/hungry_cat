@@ -1,7 +1,9 @@
 [versions]
+agp = "8.2.0"
+compileSdk = "34"
 android-gradle-plugin = "8.0.1"
-kotlin = "1.8.20"
-compose-compiler = "1.5.1"  # Должно совпадать с версией Kotlin (1.8.20 → 1.4.7)
+kotlin = "1.9.20"
+compose-compiler = "1.9.20"  # Должно совпадать с версией Kotlin (1.8.20 → 1.4.7)
 coroutines = "1.6.4"
 room = "2.5.1"
 retrofit = "2.9.0"
@@ -15,7 +17,8 @@ compose-bom = "2023.05.01"
 appcompat = "1.7.0"
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 # Удаляем kotlin-compose, так как он не нужен
