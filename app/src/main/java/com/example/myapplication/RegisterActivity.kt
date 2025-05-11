@@ -91,7 +91,7 @@ class RegisterActivity : AppCompatActivity() {
                 showError("Некорректный email")
                 false
             }
-            password.length < 6 -> {
+            password.length < 8 -> {
                 showError("Пароль должен содержать минимум 6 символов")
                 false
             }

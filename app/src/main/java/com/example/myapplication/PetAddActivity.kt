@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.ui.viewmodels.PetFeederViewModel
 import java.util.Calendar
 
 class PetAddActivity : AppCompatActivity() {
@@ -59,11 +61,12 @@ class PetAddActivity : AppCompatActivity() {
 
     private val feedingTimes = mutableListOf<FeedingTime>()
     private lateinit var adapter: FeedingTimesAdapter
+    private lateinit var viewModel: PetFeederViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pet) // Убедитесь, что имя файла правильное!
-
+        viewModel = ViewModelProvider(this)[PetFeederViewModel::class.java]
         initViews()
         setupRecyclerView()
         setupListeners()

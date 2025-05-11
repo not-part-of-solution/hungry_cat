@@ -26,7 +26,6 @@ interface FeedingDao {
 data class FeedingWithPet(
     val id: Int,
     val pet_id: Int,
-    val food_type: String,
     val time: String,
     val portion_size: Int,
     val pet_name: String

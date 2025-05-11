@@ -31,7 +31,7 @@ class PetFeederRepository(
 
     // Добавление расписания кормления
     suspend fun addFeedingTime(petId: Int, foodType: String, time: String, portionSize: Int) {
-        feedingDao.insert(FeedingTime(petId = petId, food_type = foodType, time = time, portion_size = portionSize))
+        feedingDao.insert(FeedingTime(petId = petId, time = time, portion_size = portionSize))
     }
 
     // Получение расписания с именами питомцев

@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.viewmodels
 
 import android.app.Application
+import android.content.Context.MODE_PRIVATE
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.AppDatabase
@@ -47,5 +48,9 @@ class PetFeederViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun getFeedingSchedule(userId: Int): Flow<List<FeedingWithPet>> {
         return repository.getFeedingTimesWithPets(userId)
+    }
+    fun getCurrentUserId(): Int {
+        val prefs = getApplication<Application>().getSharedPreferences("app_prefs", MODE_PRIVATE)
+        return prefs.getInt("current_user_id", -1)
     }
 }
