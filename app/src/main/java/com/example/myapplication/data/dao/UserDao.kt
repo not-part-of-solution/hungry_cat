@@ -16,4 +16,7 @@ interface UserDao {
     @Query("SELECT * FROM user WHERE id = :userId")
     suspend fun getUserById(userId: Int): User?
 
+    @Query("SELECT * FROM user WHERE name LIKE '%' || :query || '%'")
+    fun searchByName(query: String): List<User>
+
 }
