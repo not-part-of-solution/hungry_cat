@@ -17,8 +17,12 @@ import androidx.room.PrimaryKey
     ]
 )
 data class FeedingTime(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "pet_id") val petId: Int,  // Внешний ключ
+    @PrimaryKey(autoGenerate = true)
+    val feeder_time_id: Int = 0,
+
+    val pet_id: Int,  // Ссылка на питомца
+
     val time: String,  // Время в формате "HH:mm"
-    val portion_size: Int  // Размер порции в граммах
+
+    val portions: Int  // Количество порций
 )

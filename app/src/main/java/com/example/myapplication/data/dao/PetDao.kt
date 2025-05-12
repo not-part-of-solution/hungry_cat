@@ -11,9 +11,9 @@ interface PetDao {
     @Insert
     suspend fun insert(pet: Pet): Long
 
-    @Query("SELECT * FROM pets WHERE user_id = :userId")
+    @Query("SELECT * FROM pets WHERE userId = :userId")
     fun getPetsByUser(userId: Int): Flow<List<Pet>>  // Flow для LiveData
 
     @Query("DELETE FROM pets WHERE pet_id = :petId")
-    suspend fun deletePet(petId: Int)
+    suspend fun deletePet(petId: Int)  // Ничего не возвращает (void)
 }

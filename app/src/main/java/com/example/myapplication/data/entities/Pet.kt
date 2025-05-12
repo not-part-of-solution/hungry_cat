@@ -11,15 +11,16 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = User::class,
             parentColumns = ["id"],
-            childColumns = ["user_id"],
+            childColumns = ["userId"],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
 data class Pet(
-    @PrimaryKey(autoGenerate = true) val pet_id: Int = 0,
-    @ColumnInfo(name = "user_id") val userId: Int,  // Внешний ключ
+    @PrimaryKey(autoGenerate = true)
+    val pet_id: Int = 0,
+    val userId: Int,
     val name: String,
-    val weight: Float,  // Вес в кг
-    val google_drive_link: String?  // Ссылка на Google Drive (может быть null)
+    val weight: Float,
+    val google_drive_link: String? = null
 )

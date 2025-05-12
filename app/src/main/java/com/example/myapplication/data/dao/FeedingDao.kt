@@ -1,5 +1,6 @@
 package com.example.myapplication.data.dao
 
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -10,23 +11,33 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FeedingDao {
     @Insert
-    suspend fun insert(feedingTime: FeedingTime)
+    suspend fun insert(feederTime: FeedingTime)
+
+    @Insert
+    suspend fun insertAll(feederTimes: List<FeedingTime>)
+
+    @Query("SELECT * FROM feeding_times WHERE pet_id = :petId")
+    fun getFeederTimesForPet(petId: Int): Flow<List<FeedingTime>>
 
     @Transaction
     @Query("""
-        SELECT feeding_times.*, pets.name as pet_name 
-        FROM feeding_times 
-        INNER JOIN pets ON feeding_times.pet_id = pets.pet_id
-        WHERE pets.user_id = :userId
+        SELECT 
+            ft.feeder_time_id AS id,
+            ft.pet_id,
+            ft.time,
+            ft.portions AS portion_size,
+            p.name AS pet_name
+        FROM feeding_times ft
+        JOIN pets p ON ft.pet_id = p.pet_id
+        WHERE p.userId = :userId
     """)
-    fun getFeedingTimesWithPetNames(userId: Int): Flow<List<FeedingWithPet>>  // Кастомный DTO
-}
+    fun getFeedingTimesWithPets(userId: Int): Flow<List<FeedingWithPet>>
 
-// DTO для связи расписания и имени питомца
-data class FeedingWithPet(
-    val id: Int,
-    val pet_id: Int,
-    val time: String,
-    val portion_size: Int,
-    val pet_name: String
-)
+    data class FeedingWithPet(
+        val id: Int,
+        @ColumnInfo(name = "pet_id") val petId: Int,
+        val time: String,
+        @ColumnInfo(name = "portion_size") val portions: Int,
+        @ColumnInfo(name = "pet_name") val petName: String
+    )
+}

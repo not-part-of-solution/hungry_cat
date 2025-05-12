@@ -4,12 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.myapplication.data.dao.UserDao
-import com.example.myapplication.data.dao.PetDao
-import com.example.myapplication.data.dao.FeedingDao
-import com.example.myapplication.data.entities.User
-import com.example.myapplication.data.entities.Pet
+import com.example.myapplication.data.dao.*
 import com.example.myapplication.data.entities.FeedingTime
+import com.example.myapplication.data.entities.Pet
+import com.example.myapplication.data.entities.User
 
 @Database(
     entities = [User::class, Pet::class, FeedingTime::class],
@@ -30,7 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "pet_feeder_db"  // Имя файла БД
+                    "pet_feeder_db"
                 ).build()
                 INSTANCE = instance
                 instance

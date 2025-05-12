@@ -1,6 +1,5 @@
 package com.example.myapplication
 
-import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,20 +8,25 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.data.entities.Pet
+import com.example.myapplication.data.entities.FeedingTime
 import com.example.myapplication.ui.viewmodels.PetFeederViewModel
-import java.util.Calendar
+import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.random.Random
 
 class PetAddActivity : AppCompatActivity() {
 
-    // Модель данных (вложенный класс)
-    data class FeedingTime(val time: String, val portions: Int)
+    // Модель данных (вложенный класс) - теперь без pet_id
+    data class UIFeedingTime(val time: String, val portions: Int)
 
     // Адаптер (вложенный класс)
     private inner class FeedingTimesAdapter(
-        private val times: MutableList<FeedingTime>,
-        private val onDeleteClick: (FeedingTime) -> Unit
+        private val times: MutableList<UIFeedingTime>,
+        private val onDeleteClick: (UIFeedingTime) -> Unit
     ) : RecyclerView.Adapter<FeedingTimesAdapter.ViewHolder>() {
 
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -59,13 +63,41 @@ class PetAddActivity : AppCompatActivity() {
     private lateinit var btnSave: Button
     private lateinit var btnBack: ImageButton
 
-    private val feedingTimes = mutableListOf<FeedingTime>()
+    private val feedingTimes = mutableListOf<UIFeedingTime>()
     private lateinit var adapter: FeedingTimesAdapter
     private lateinit var viewModel: PetFeederViewModel
 
+    private fun showPortionsDialog(time: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Количество грамм для $time")
+            .setItems(
+                arrayOf(
+                    "10",
+                    "20",
+                    "30",
+                    "40",
+                    "50",
+                    "60",
+                    "70",
+                    "80",
+                    "90",
+                    "100"
+                )
+            ) { _, which ->
+                val portions = if (which == 5) 6 else which + 1
+                if (feedingTimes.none { it.time == time }) {
+                    feedingTimes.add(UIFeedingTime(time, portions))
+                    adapter.notifyItemInserted(feedingTimes.size - 1)
+                } else {
+                    Toast.makeText(this, "Время уже добавлено", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .show()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pet) // Убедитесь, что имя файла правильное!
+        setContentView(R.layout.activity_pet)
         viewModel = ViewModelProvider(this)[PetFeederViewModel::class.java]
         initViews()
         setupRecyclerView()
@@ -94,9 +126,7 @@ class PetAddActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         btnBack.setOnClickListener { finish() }
-
         btnAddFeedingTime.setOnClickListener { showTimeAndPortionsPicker() }
-
         btnSave.setOnClickListener { savePet() }
     }
 
@@ -105,17 +135,14 @@ class PetAddActivity : AppCompatActivity() {
         val hourPicker = dialogView.findViewById<NumberPicker>(R.id.hourPicker)
         val minutePicker = dialogView.findViewById<NumberPicker>(R.id.minutePicker)
 
-        // Настройка часов (0-23)
         hourPicker.minValue = 0
         hourPicker.maxValue = 23
-        hourPicker.wrapSelectorWheel = true // Включаем циклическую прокрутку
+        hourPicker.wrapSelectorWheel = true
 
-        // Настройка минут (0-59)
         minutePicker.minValue = 0
         minutePicker.maxValue = 59
-        minutePicker.wrapSelectorWheel = true // Включаем циклическую прокрутку
+        minutePicker.wrapSelectorWheel = true
 
-        // Установка текущего времени
         val calendar = Calendar.getInstance()
         hourPicker.value = calendar.get(Calendar.HOUR_OF_DAY)
         minutePicker.value = calendar.get(Calendar.MINUTE)
@@ -133,30 +160,71 @@ class PetAddActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showPortionsDialog(time: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Количество грамм для $time")
-            .setItems(arrayOf("10", "20", "30", "40", "50", "60", "70", "80", "90", "100")) { _, which ->
-                val portions = if (which == 5) 6 else which + 1
-                if (feedingTimes.none { it.time == time }) {
-                    feedingTimes.add(FeedingTime(time, portions))
-                    adapter.notifyItemInserted(feedingTimes.size - 1)
-                } else {
-                    Toast.makeText(this, "Время уже добавлено", Toast.LENGTH_SHORT).show()
-                }
-            }
-            .show()
+
+    private fun convertToFeederTimes(petId: Int): List<FeedingTime> {
+        return feedingTimes.map { uiFeedingTime ->
+            FeedingTime(
+                pet_id = petId,
+                time = uiFeedingTime.time,
+                portions = uiFeedingTime.portions  // Совпадающие имена полей
+            )
+        }
     }
 
+
     private fun savePet() {
+        val name = etName.text.toString()
+        val weight = etValue.text.toString().toFloatOrNull()
+        val link = etLink.text.toString().takeIf { it.isNotBlank() }
+
         when {
-            etName.text.isEmpty() -> etName.error = "Введите имя"
-            etValue.text.isEmpty() -> etValue.error = "Введите вес"
-            etRoom.text.isEmpty() -> etRoom.error = "Введите комнату"
-            feedingTimes.isEmpty() -> Toast.makeText(this, "Добавьте время кормления", Toast.LENGTH_SHORT).show()
+            name.isEmpty() -> etName.error = "Введите имя питомца"
+            weight == null || weight <= 0 -> etValue.error = "Введите корректный вес"
+            feedingTimes.isEmpty() -> Toast.makeText(
+                this,
+                "Добавьте время кормления",
+                Toast.LENGTH_SHORT
+            ).show()
+
             else -> {
-                Toast.makeText(this, "Питомец ${etName.text} сохранён!", Toast.LENGTH_SHORT).show()
-                finish()
+                lifecycleScope.launch {
+                    try {
+                        val userId = viewModel.getCurrentUserId().toInt()
+
+                        // 1. Сохраняем питомца
+                        val pet = Pet(
+                            userId = userId,
+                            name = name,
+                            weight = weight,
+                            google_drive_link = link
+                        )
+
+                        val petId = viewModel.savePet(pet)
+
+                        if (petId > 0) {
+                            // 2. Сохраняем расписания
+                            val feederTimes = convertToFeederTimes(petId.toInt())
+                            viewModel.saveFeederTimes(feederTimes)
+
+                            // 3. Очищаем UI
+                            feedingTimes.clear()
+                            adapter.notifyDataSetChanged()
+
+                            Toast.makeText(
+                                this@PetAddActivity,
+                                "$name сохранён!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            finish()
+                        }
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            this@PetAddActivity,
+                            "Ошибка сохранения: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
         }
     }

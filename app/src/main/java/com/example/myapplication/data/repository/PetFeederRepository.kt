@@ -3,7 +3,7 @@ package com.example.myapplication.data.repository
 import com.example.myapplication.data.dao.UserDao
 import com.example.myapplication.data.dao.PetDao
 import com.example.myapplication.data.dao.FeedingDao
-import com.example.myapplication.data.dao.FeedingWithPet
+import com.example.myapplication.data.dao.FeedingDao.FeedingWithPet
 import com.example.myapplication.data.entities.User
 import com.example.myapplication.data.entities.Pet
 import com.example.myapplication.data.entities.FeedingTime
@@ -31,11 +31,19 @@ class PetFeederRepository(
 
     // Добавление расписания кормления
     suspend fun addFeedingTime(petId: Int, foodType: String, time: String, portionSize: Int) {
-        feedingDao.insert(FeedingTime(petId = petId, time = time, portion_size = portionSize))
+        feedingDao.insert(FeedingTime(pet_id = petId, time = time, portions = portionSize))
+    }
+
+    suspend fun insertFeederTime(feedingTime: FeedingTime) {
+        return feedingDao.insert(feedingTime)
     }
 
     // Получение расписания с именами питомцев
+    suspend fun insertFeederTimes(feederTimes: List<FeedingTime>) {
+        feedingDao.insertAll(feederTimes)
+    }
+
     fun getFeedingTimesWithPets(userId: Int): Flow<List<FeedingWithPet>> {
-        return feedingDao.getFeedingTimesWithPetNames(userId)
+        return feedingDao.getFeedingTimesWithPets(userId)
     }
 }
