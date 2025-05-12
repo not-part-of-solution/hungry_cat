@@ -53,14 +53,33 @@ class PetDaoTest {
 
     @Test
     fun petInsertAndGetByUser() = runBlocking {
+        // 1. Insert test user
         val userId = userDao.insert(User(name = "Owner", email = "owner@test.com", password = "123"))
+        assertTrue(userId > 0)
 
-        val petId = petDao.insert(Pet(userId = userId.toInt(), name = "Buddy", weight = 5f))
+        // 2. Insert pet with Google Drive link
+        val testDriveLink = "https://drive.google.com/file/d/12345/view"
+        val petId = petDao.insert(
+            Pet(
+                userId = userId.toInt(),
+                name = "Buddy",
+                weight = 5f,
+                google_drive_link = testDriveLink
+            )
+        )
         assertTrue(petId > 0)
 
+        // 3. Retrieve pets for user
         val pets = petDao.getPetsByUser(userId.toInt()).first()
+
+        // 4. Verify results
         assertEquals(1, pets.size)
-        assertEquals("Buddy", pets[0].name)
+        with(pets[0]) {
+            assertEquals("Buddy", name)
+            assertEquals(testDriveLink, google_drive_link)
+            assertEquals(5f, weight)
+            assertEquals(userId.toInt(), userId)
+        }
     }
 
     @Test
@@ -76,6 +95,7 @@ class PetDaoTest {
         assertEquals(1, times.size)
         assertEquals("12:00", times[0].time)
     }
+
 
     @Test
     fun deletePetCascades() = runBlocking {

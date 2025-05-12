@@ -16,7 +16,6 @@ import com.example.myapplication.data.entities.FeedingTime
 import com.example.myapplication.ui.viewmodels.PetFeederViewModel
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.random.Random
 
 class PetAddActivity : AppCompatActivity() {
 
@@ -56,7 +55,6 @@ class PetAddActivity : AppCompatActivity() {
     // UI элементы
     private lateinit var etName: EditText
     private lateinit var etValue: EditText
-    private lateinit var etRoom: EditText
     private lateinit var etLink: EditText
     private lateinit var rvFeedingTimes: RecyclerView
     private lateinit var btnAddFeedingTime: Button
@@ -107,7 +105,6 @@ class PetAddActivity : AppCompatActivity() {
     private fun initViews() {
         etName = findViewById(R.id.etName)
         etValue = findViewById(R.id.etValue)
-        etRoom = findViewById(R.id.etRoom)
         etLink = findViewById(R.id.etLink)
         rvFeedingTimes = findViewById(R.id.rvFeedingTimes)
         btnAddFeedingTime = findViewById(R.id.btnAddFeedingTime)
