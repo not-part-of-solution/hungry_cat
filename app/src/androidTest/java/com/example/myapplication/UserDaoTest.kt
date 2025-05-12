@@ -56,6 +56,28 @@ class UserDaoTest {
     }
 
     @Test
+    fun loginWithExistingUser_shouldReturnUser() = runBlocking {
+        // Создаем тестового пользователя
+        val testUser = User(
+            id = 2,
+            name = "Login Test User",
+            email = "login@example.com",
+            password = "loginpassword"
+        )
+
+        // Вставляем пользователя в базу
+        userDao.insert(testUser)
+
+        // Пытаемся войти с правильными данными
+        val loggedInUser = userDao.login("login@example.com", "loginpassword")
+
+        // Проверяем, что пользователь найден и данные верны
+        assertThat(loggedInUser?.name, equalTo("Login Test User"))
+        assertThat(loggedInUser?.email, equalTo("login@example.com"))
+    }
+
+
+    @Test
     fun getUserByEmail_shouldReturnNullForNonExistentUser() = runBlocking {
         val retrievedUser = userDao.getUserByEmail("nonexistent@example.com")
         assertThat(retrievedUser, equalTo(null))

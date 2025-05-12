@@ -19,4 +19,6 @@ interface UserDao {
     @Query("SELECT * FROM user WHERE name LIKE '%' || :query || '%'")
     fun searchByName(query: String): List<User>
 
+    @Query("SELECT * FROM user WHERE email = :email AND password = :password LIMIT 1")
+    suspend fun login(email: String, password: String): User?
 }
