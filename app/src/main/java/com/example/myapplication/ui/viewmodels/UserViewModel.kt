@@ -27,19 +27,15 @@ class UserViewModel(
     fun registerUser(user: User) {
         viewModelScope.launch {
             try {
-                if (userDao.getUserByEmail(user.email) != null) {
-                    registrationStatus.postValue(AuthStatus.Error("Email already in use"))
-                    return@launch
-                }
-
-                val userId = userDao.insert(user)
-                saveSession(userId)
-                registrationStatus.postValue(AuthStatus.Success(userId))
+                val id = userDao.insert(user)
+                sharedPrefs.edit().putLong("current_user_id", id).apply()
+                registrationStatus.postValue(AuthStatus.Success(id))  // ✅ передаём id
             } catch (e: Exception) {
-                registrationStatus.postValue(AuthStatus.Error("Registration failed: ${e.message}"))
+                registrationStatus.postValue(AuthStatus.Error(e.message ?: "Неизвестная ошибка"))
             }
         }
     }
+
 
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {

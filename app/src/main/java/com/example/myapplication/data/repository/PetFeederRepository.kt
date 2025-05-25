@@ -19,6 +19,9 @@ class PetFeederRepository(
         return userDao.insert(User(name = name, email = email, password = password))
     }
 
+    suspend fun insertPet(pet: Pet): Long {
+        return petDao.insert(pet)
+    }
     // Добавление питомца
     suspend fun addPet(userId: Long, name: String, weight: Float, googleDriveLink: String?): Long {
         return petDao.insert(Pet(userId = userId, name = name, weight = weight, google_drive_link = googleDriveLink))
@@ -27,6 +30,10 @@ class PetFeederRepository(
     // Получение всех питомцев пользователя
     fun getPetsByUser(userId: Long): Flow<List<Pet>> {
         return petDao.getPetsByUser(userId)
+    }
+
+    suspend fun getPetById(petId: Long): Pet? {
+        return petDao.getPetById(petId)
     }
 
     // Добавление расписания кормления

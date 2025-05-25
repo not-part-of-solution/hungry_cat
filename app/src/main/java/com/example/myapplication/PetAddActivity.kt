@@ -175,20 +175,33 @@ class PetAddActivity : AppCompatActivity() {
         val link = etLink.text.toString().takeIf { it.isNotBlank() }
 
         when {
-            name.isEmpty() -> etName.error = "Введите имя питомца"
-            weight == null || weight <= 0 -> etValue.error = "Введите корректный вес"
-            feedingTimes.isEmpty() -> Toast.makeText(
-                this,
-                "Добавьте время кормления",
-                Toast.LENGTH_SHORT
-            ).show()
-
+            name.isEmpty() -> {
+                etName.error = "Введите имя питомца"
+                return
+            }
+            weight == null || weight <= 0 -> {
+                etValue.error = "Введите корректный вес"
+                return
+            }
+            feedingTimes.isEmpty() -> {
+                Toast.makeText(this, "Добавьте время кормления", Toast.LENGTH_SHORT).show()
+                return
+            }
             else -> {
                 lifecycleScope.launch {
                     try {
                         val userId = viewModel.getCurrentUserId()
 
-                        // 1. Сохраняем питомца
+                        // ✅ Проверка, что userId корректен
+                        if (userId <= 0) {
+                            Toast.makeText(
+                                this@PetAddActivity,
+                                "Ошибка: пользователь не авторизован",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            return@launch
+                        }
+
                         val pet = Pet(
                             userId = userId,
                             name = name,
@@ -199,27 +212,34 @@ class PetAddActivity : AppCompatActivity() {
                         val petId = viewModel.savePet(pet)
 
                         if (petId > 0) {
-                            // 2. Сохраняем расписания
-                            val feederTimes = convertToFeederTimes(petId.toLong())
+                            val feederTimes = convertToFeederTimes(petId)
                             viewModel.saveFeederTimes(feederTimes)
 
-                            // 3. Очищаем UI
-                            feedingTimes.clear()
-                            adapter.notifyDataSetChanged()
-
-                            Toast.makeText(
-                                this@PetAddActivity,
-                                "$name сохранён!",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            runOnUiThread {
+                                Toast.makeText(
+                                    this@PetAddActivity,
+                                    "$name сохранён!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                             finish()
+                        } else {
+                            runOnUiThread {
+                                Toast.makeText(
+                                    this@PetAddActivity,
+                                    "Ошибка сохранения питомца",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     } catch (e: Exception) {
-                        Toast.makeText(
-                            this@PetAddActivity,
-                            "Ошибка сохранения: ${e.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        runOnUiThread {
+                            Toast.makeText(
+                                this@PetAddActivity,
+                                "Ошибка сохранения: ${e.localizedMessage}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }

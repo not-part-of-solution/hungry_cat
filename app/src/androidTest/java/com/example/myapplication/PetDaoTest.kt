@@ -3,20 +3,17 @@ package com.example.myapplication.data
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.myapplication.data.entities.*
 import com.example.myapplication.data.dao.*
+import com.example.myapplication.data.entities.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import org.junit.After
-import org.junit.Assert.assertTrue
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Before
-import org.junit.Test
+import org.junit.*
+import org.junit.Assert.*
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class PetDaoTest {
+
     private lateinit var db: AppDatabase
     private lateinit var userDao: UserDao
     private lateinit var petDao: PetDao
@@ -27,7 +24,7 @@ class PetDaoTest {
         db = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             AppDatabase::class.java
-        ).build()
+        ).allowMainThreadQueries().build()
 
         userDao = db.userDao()
         petDao = db.petDao()
@@ -35,81 +32,84 @@ class PetDaoTest {
     }
 
     @After
-    fun tearDown() {
+    fun teardown() {
         db.close()
     }
 
     @Test
-    fun userInsertAndRetrieve() = runBlocking {
-        val id = userDao.insert(User(name = "Alex", email = "alex@test.com", password = "123"))
-        assertTrue(id > 0)
+    fun should_insert_and_retrieve_user_by_email() = runBlocking {
+        // arrange
+        val user = User(name = "Alex", email = "alex@test.com", password = "123")
 
-        val user = userDao.getUserByEmail("alex@test.com")
-        assertEquals("Alex", user?.name)
+        // act
+        val id = userDao.insert(user)
+        val retrieved = userDao.getUserByEmail("alex@test.com")
+
+        // assert
+        assertTrue("ID пользователя должен быть положительным", id > 0)
+        assertNotNull("Пользователь должен быть найден", retrieved)
+        assertEquals(user.name, retrieved?.name)
+        assertEquals(user.email, retrieved?.email)
     }
 
     @Test
-    fun petInsertAndGetByUser() = runBlocking {
-        // 1. Insert test user
+    fun should_insert_pet_and_retrieve_by_user_id() = runBlocking {
+        // arrange
         val userId = userDao.insert(User(name = "Owner", email = "owner@test.com", password = "123"))
-        assertTrue(userId > 0)
+        val testLink = "https://drive.google.com/file/d/12345/view"
+        val pet = Pet(userId = userId, name = "Buddy", weight = 5f, google_drive_link = testLink)
 
-        // 2. Insert pet with Google Drive link
-        val testDriveLink = "https://drive.google.com/file/d/12345/view"
-        val petId = petDao.insert(
-            Pet(
-                userId = userId.toLong(),
-                name = "Buddy",
-                weight = 5f,
-                google_drive_link = testDriveLink
-            )
-        )
-        assertTrue(petId > 0)
+        // act
+        val petId = petDao.insert(pet)
+        val pets = petDao.getPetsByUser(userId).first()
 
-        // 3. Retrieve pets for user
-        val pets = petDao.getPetsByUser(userId.toLong()).first()
+        // assert
+        assertTrue("ID питомца должен быть положительным", petId > 0)
+        assertEquals("Должен быть один питомец", 1, pets.size)
 
-        // 4. Verify results
-        assertEquals(1, pets.size)
-        with(pets[0]) {
-            assertEquals("Buddy", name)
-            assertEquals(testDriveLink, google_drive_link)
-            assertEquals(5f, weight)
-            assertEquals(userId.toLong(), userId) // приводим expected к Long
-        }
+        val retrieved = pets.first()
+        assertEquals("Buddy", retrieved.name)
+        assertEquals(testLink, retrieved.google_drive_link)
+        assertEquals(5f, retrieved.weight)
+        assertEquals(userId, retrieved.userId)
     }
 
     @Test
-    fun feedingTimeOperations() = runBlocking {
+    fun should_insert_and_retrieve_feeding_times_for_pet() = runBlocking {
+        // arrange
         val userId = userDao.insert(User(name = "O", email = "o@t.com", password = "1"))
-        val petId = petDao.insert(Pet(userId = userId.toLong(), name = "P", weight = 1f))
+        val petId = petDao.insert(Pet(userId = userId, name = "P", weight = 1f))
 
-        // Insert
-        feedingDao.insert(FeedingTime(pet_id = petId.toLong(), time = "12:00", portions = 2))
-
-        // Verify
+        // act
+        feedingDao.insert(FeedingTime(pet_id = petId, time = "12:00", portions = 2))
         val times = feedingDao.getFeederTimesForPet(petId.toInt()).first()
-        assertEquals(1, times.size)
-        assertEquals("12:00", times[0].time)
+
+        // assert
+        assertEquals("Должно быть одно время кормления", 1, times.size)
+        val time = times.first()
+        assertEquals("12:00", time.time)
+        assertEquals(2, time.portions)
     }
 
 
+
     @Test
-    fun deletePetCascades() = runBlocking {
-        // 1. Добавляем тестовые данные
-        val userId = userDao.insert(User(name = "O", email = "o@t.com", password = "1"))
-        val petId = petDao.insert(Pet(userId = userId.toLong(), name = "P", weight = 1f))
-        feedingDao.insert(FeedingTime(pet_id = petId.toLong(), time = "12:00", portions = 2))
+    fun deletePetRemovesAssociatedFeedingTimes() = runBlocking {
+        // Given
+        val userId = userDao.insert(User(name = "Temp Owner", email = "temp@test.com", password = "123"))
+        val petId = petDao.insert(Pet(userId = userId, name = "Temp Pet", weight = 3.0f))
+        feedingDao.insert(FeedingTime(pet_id = petId, time = "12:00", portions = 1))
 
-        // 2. Убедимся, что кормление добавлено
-        val initialTimes = feedingDao.getFeederTimesForPet(petId.toInt()).first()
-        assertFalse(initialTimes.isEmpty()) // Проверяем, что кормление есть
+        // Verify initial state
+        assertNotNull(petDao.getPetById(petId))
+        assertFalse(feedingDao.getFeederTimesForPet(petId.toInt()).first().isEmpty())
 
-        // 3. Удаляем питомца (должно каскадно удалить кормление)
-        petDao.deletePet(petId.toLong())
+        // When
+        val deletedRows = petDao.deletePet(petId)
 
-        // 4. Проверяем, что кормления больше нет
-        val timesAfterDeletion = feedingDao.getFeederTimesForPet(petId.toInt()).first()
-        assertTrue(timesAfterDeletion.isEmpty()) // Список должен быть пуст
+        // Then
+        assertEquals(1, deletedRows)
+        assertNull(petDao.getPetById(petId))
+        assertTrue(feedingDao.getFeederTimesForPet(petId.toInt()).first().isEmpty())
     }
 }
