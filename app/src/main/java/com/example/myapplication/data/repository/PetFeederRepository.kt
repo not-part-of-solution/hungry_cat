@@ -20,17 +20,17 @@ class PetFeederRepository(
     }
 
     // Добавление питомца
-    suspend fun addPet(userId: Int, name: String, weight: Float, googleDriveLink: String?): Long {
+    suspend fun addPet(userId: Long, name: String, weight: Float, googleDriveLink: String?): Long {
         return petDao.insert(Pet(userId = userId, name = name, weight = weight, google_drive_link = googleDriveLink))
     }
 
     // Получение всех питомцев пользователя
-    fun getPetsByUser(userId: Int): Flow<List<Pet>> {
+    fun getPetsByUser(userId: Long): Flow<List<Pet>> {
         return petDao.getPetsByUser(userId)
     }
 
     // Добавление расписания кормления
-    suspend fun addFeedingTime(petId: Int, foodType: String, time: String, portionSize: Int) {
+    suspend fun addFeedingTime(petId: Long, time: String, portionSize: Int) {
         feedingDao.insert(FeedingTime(pet_id = petId, time = time, portions = portionSize))
     }
 
@@ -43,7 +43,7 @@ class PetFeederRepository(
         feedingDao.insertAll(feederTimes)
     }
 
-    fun getFeedingTimesWithPets(userId: Int): Flow<List<FeedingWithPet>> {
+    fun getFeedingTimesWithPets(userId: Long): Flow<List<FeedingWithPet>> {
         return feedingDao.getFeedingTimesWithPets(userId)
     }
 }

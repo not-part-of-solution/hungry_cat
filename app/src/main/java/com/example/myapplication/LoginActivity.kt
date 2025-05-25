@@ -2,14 +2,13 @@ package com.example.myapplication
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import com.example.myapplication.data.AppDatabase
 import com.example.myapplication.databinding.ActivityLoginBinding
 import com.example.myapplication.ui.viewmodels.UserViewModel
-import kotlinx.coroutines.launch
-
 
 class LoginActivity : AppCompatActivity() {
 
@@ -21,17 +20,37 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Инициализация ViewModel
-        viewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        val userDao = AppDatabase.getDatabase(this).userDao()
+        viewModel = ViewModelProvider(this,
+            object : ViewModelProvider.Factory {
+                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                    return UserViewModel(application, userDao) as T
+                }
+            }
+        )[UserViewModel::class.java]
 
-        setupListeners()
-        observeLoginStatus()
+        setupViews()
+        setupObservers()
         checkAutoLogin()
     }
 
-    private fun setupListeners() {
-        binding.loginButton.setOnClickListener {
-            attemptLogin()
+    private fun setupViews() {
+        binding.apply {
+            loginButton.setOnClickListener { attemptLogin() }
+        }
+    }
+
+    private fun setupObservers() {
+        viewModel.loginStatus.observe(this) { status ->
+            when (status) {
+                is UserViewModel.AuthStatus.Success -> {
+                    showSuccess("Вход выполнен успешно")
+                    navigateToHome()
+                }
+                is UserViewModel.AuthStatus.Error -> {
+                    showError(status.message)
+                }
+            }
         }
     }
 
@@ -41,19 +60,17 @@ class LoginActivity : AppCompatActivity() {
 
         if (!validateInput(email, password)) return
 
-        lifecycleScope.launch {
-            viewModel.loginUser(email, password)
-        }
+        viewModel.loginUser(email, password)
     }
 
     private fun validateInput(email: String, password: String): Boolean {
         return when {
             email.isEmpty() || password.isEmpty() -> {
-                showError("Заполните все поля")
+                showError("Все поля должны быть заполнены")
                 false
             }
-            !isValidEmail(email) -> {
-                showError("Некорректный email")
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                showError("Введите корректный email")
                 false
             }
             password.length < 6 -> {
@@ -64,28 +81,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeLoginStatus() {
-        viewModel.loginStatus.observe(this) { status ->
-            when (status) {
-                is UserViewModel.LoginStatus.Success -> {
-                    showSuccess("Вход выполнен")
-                    navigateToHome()
-                }
-                is UserViewModel.LoginStatus.Error -> {
-                    showError(status.message)
-                }
-            }
-        }
-    }
-
     private fun checkAutoLogin() {
-        if (viewModel.getCurrentUserId() != -1) {
+        if (viewModel.isLoggedIn()) {
             navigateToHome()
         }
-    }
-
-    private fun isValidEmail(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
     private fun showError(message: String) {
@@ -94,11 +93,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun showSuccess(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun navigateToRegister() {
-        startActivity(Intent(this, RegisterActivity::class.java))
-        finish()
     }
 
     private fun navigateToHome() {

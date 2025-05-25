@@ -158,7 +158,7 @@ class PetAddActivity : AppCompatActivity() {
     }
 
 
-    private fun convertToFeederTimes(petId: Int): List<FeedingTime> {
+    private fun convertToFeederTimes(petId: Long): List<FeedingTime> {
         return feedingTimes.map { uiFeedingTime ->
             FeedingTime(
                 pet_id = petId,
@@ -186,7 +186,7 @@ class PetAddActivity : AppCompatActivity() {
             else -> {
                 lifecycleScope.launch {
                     try {
-                        val userId = viewModel.getCurrentUserId().toInt()
+                        val userId = viewModel.getCurrentUserId()
 
                         // 1. Сохраняем питомца
                         val pet = Pet(
@@ -200,7 +200,7 @@ class PetAddActivity : AppCompatActivity() {
 
                         if (petId > 0) {
                             // 2. Сохраняем расписания
-                            val feederTimes = convertToFeederTimes(petId.toInt())
+                            val feederTimes = convertToFeederTimes(petId.toLong())
                             viewModel.saveFeederTimes(feederTimes)
 
                             // 3. Очищаем UI

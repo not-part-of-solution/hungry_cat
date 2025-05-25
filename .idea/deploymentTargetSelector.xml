@@ -13,13 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="getUserByEmail_shouldReturnNullForNonExistentUser()">
+      <SelectionState runConfigName="petInsertAndGetByUser()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="RegistrationTests">
+      <SelectionState runConfigName="UserViewModelTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="registration_success()">
+      <SelectionState runConfigName="loginWithInvalidCredentials_shouldFail()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="loginWithValidCredentials_shouldSucceed()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="registerNewUser_shouldSaveSession()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

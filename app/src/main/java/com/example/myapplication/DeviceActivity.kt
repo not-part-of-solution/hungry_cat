@@ -33,7 +33,6 @@ class DeviceActivity : AppCompatActivity() {
     private fun initViews() {
         // Инициализация всех элементов
         etName = findViewById(R.id.etName)
-        etRoom = findViewById(R.id.etRoom)
         rgConnectionType = findViewById(R.id.rgConnectionType)
         btnBack = findViewById(R.id.myButton)
         btnHome = findViewById(R.id.btnHome)
@@ -73,7 +72,6 @@ class DeviceActivity : AppCompatActivity() {
         if (!validateInputs()) return
 
         val name = etName.text.toString()
-        val room = etRoom.text.toString()
 
         showToast("Подготовка WiFi подключения для $name")
         // Здесь реализация WiFi подключения
@@ -83,7 +81,6 @@ class DeviceActivity : AppCompatActivity() {
         if (!validateInputs()) return
 
         val name = etName.text.toString()
-        val room = etRoom.text.toString()
 
         showToast("Подготовка Bluetooth подключения для $name")
         // Здесь реализация Bluetooth подключения
@@ -93,7 +90,6 @@ class DeviceActivity : AppCompatActivity() {
         if (!validateInputs()) return
 
         val name = etName.text.toString()
-        val room = etRoom.text.toString()
 
         showToast("Подготовка API подключения для $name")
 
@@ -119,11 +115,6 @@ class DeviceActivity : AppCompatActivity() {
 
         if (etName.text.isNullOrEmpty()) {
             etName.error = "Введите название устройства"
-            isValid = false
-        }
-
-        if (etRoom.text.isNullOrEmpty()) {
-            etRoom.error = "Укажите комнату"
             isValid = false
         }
 

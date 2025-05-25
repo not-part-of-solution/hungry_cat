@@ -1,6 +1,5 @@
 package com.example.myapplication.data.entities
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -20,7 +19,7 @@ data class FeedingTime(
     @PrimaryKey(autoGenerate = true)
     val feeder_time_id: Int = 0,
 
-    val pet_id: Int,  // Ссылка на питомца
+    val pet_id: Long,  // Ссылка на питомца
 
     val time: String,  // Время в формате "HH:mm"
 

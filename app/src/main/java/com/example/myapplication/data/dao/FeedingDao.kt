@@ -31,7 +31,7 @@ interface FeedingDao {
         JOIN pets p ON ft.pet_id = p.pet_id
         WHERE p.userId = :userId
     """)
-    fun getFeedingTimesWithPets(userId: Int): Flow<List<FeedingWithPet>>
+    fun getFeedingTimesWithPets(userId: Long): Flow<List<FeedingWithPet>>
 
     data class FeedingWithPet(
         val id: Int,

@@ -16,7 +16,7 @@
         <TextView
             android:id="@+id/tvDevice"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="64dp"
             android:background="#FFFFFF"
             android:fontFamily="@font/touraine_bold"
             android:gravity="center"
@@ -50,17 +50,6 @@
         android:paddingEnd="16dp"
         android:textSize="20sp" />
 
-    <EditText
-        android:id="@+id/etRoom"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/field_input"
-        android:fontFamily="@font/round_let"
-        android:hint="Комната"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:textSize="20sp" />
 
     <!-- Тип подключения - стилизовано под поля ввода -->
     <LinearLayout

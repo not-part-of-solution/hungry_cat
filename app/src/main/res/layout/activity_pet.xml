@@ -16,7 +16,7 @@
         <TextView
             android:id="@+id/tvDevice"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="64dp"
             android:background="#FFFFFF"
             android:fontFamily="@font/touraine_bold"
             android:gravity="center"

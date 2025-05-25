@@ -7,9 +7,6 @@ import com.example.myapplication.data.entities.*
 import com.example.myapplication.data.dao.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import org.hamcrest.CoreMatchers.*
-import org.hamcrest.MatcherAssert.*
-import org.hamcrest.Matchers.greaterThan
 import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Assert.assertEquals
@@ -61,7 +58,7 @@ class PetDaoTest {
         val testDriveLink = "https://drive.google.com/file/d/12345/view"
         val petId = petDao.insert(
             Pet(
-                userId = userId.toInt(),
+                userId = userId.toLong(),
                 name = "Buddy",
                 weight = 5f,
                 google_drive_link = testDriveLink
@@ -70,7 +67,7 @@ class PetDaoTest {
         assertTrue(petId > 0)
 
         // 3. Retrieve pets for user
-        val pets = petDao.getPetsByUser(userId.toInt()).first()
+        val pets = petDao.getPetsByUser(userId.toLong()).first()
 
         // 4. Verify results
         assertEquals(1, pets.size)
@@ -78,17 +75,17 @@ class PetDaoTest {
             assertEquals("Buddy", name)
             assertEquals(testDriveLink, google_drive_link)
             assertEquals(5f, weight)
-            assertEquals(userId.toInt(), userId)
+            assertEquals(userId.toLong(), userId) // приводим expected к Long
         }
     }
 
     @Test
     fun feedingTimeOperations() = runBlocking {
         val userId = userDao.insert(User(name = "O", email = "o@t.com", password = "1"))
-        val petId = petDao.insert(Pet(userId = userId.toInt(), name = "P", weight = 1f))
+        val petId = petDao.insert(Pet(userId = userId.toLong(), name = "P", weight = 1f))
 
         // Insert
-        feedingDao.insert(FeedingTime(pet_id = petId.toInt(), time = "12:00", portions = 2))
+        feedingDao.insert(FeedingTime(pet_id = petId.toLong(), time = "12:00", portions = 2))
 
         // Verify
         val times = feedingDao.getFeederTimesForPet(petId.toInt()).first()
@@ -101,15 +98,15 @@ class PetDaoTest {
     fun deletePetCascades() = runBlocking {
         // 1. Добавляем тестовые данные
         val userId = userDao.insert(User(name = "O", email = "o@t.com", password = "1"))
-        val petId = petDao.insert(Pet(userId = userId.toInt(), name = "P", weight = 1f))
-        feedingDao.insert(FeedingTime(pet_id = petId.toInt(), time = "12:00", portions = 2))
+        val petId = petDao.insert(Pet(userId = userId.toLong(), name = "P", weight = 1f))
+        feedingDao.insert(FeedingTime(pet_id = petId.toLong(), time = "12:00", portions = 2))
 
         // 2. Убедимся, что кормление добавлено
         val initialTimes = feedingDao.getFeederTimesForPet(petId.toInt()).first()
         assertFalse(initialTimes.isEmpty()) // Проверяем, что кормление есть
 
         // 3. Удаляем питомца (должно каскадно удалить кормление)
-        petDao.deletePet(petId.toInt())
+        petDao.deletePet(petId.toLong())
 
         // 4. Проверяем, что кормления больше нет
         val timesAfterDeletion = feedingDao.getFeederTimesForPet(petId.toInt()).first()
