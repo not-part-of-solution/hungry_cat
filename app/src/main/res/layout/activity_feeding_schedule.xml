@@ -7,23 +7,22 @@
     android:background="#3F3F3F"
     android:padding="16dp">
 
-    <!-- Заголовок с кнопкой назад -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp">
 
         <TextView
-            android:id="@+id/tvPet"
+            android:id="@+id/tvScheduleTitle"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="#FFFFFF"
-            android:gravity="center"
-            android:text="Питомцы"
-            android:fontFamily="@font/touraine_bold"
-            android:textColor="#000000"
-            android:textSize="20sp"
+            android:layout_height="wrap_content"
+            android:text="Расписание кормления"
+            android:textSize="24sp"
             android:textStyle="bold"
+            android:background="#FFFFFF"
+            android:fontFamily="@font/touraine_bold"
+            android:textColor="#791c45"
+            android:gravity="center"
             android:padding="12dp"/>
 
         <ImageButton
@@ -35,31 +34,11 @@
             android:contentDescription="Назад"
             android:padding="12dp"
             android:src="@drawable/return_small"/>
-
-        <ImageButton
-            android:id="@+id/btnDinam"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="end|center_vertical"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Трекер"
-            android:padding="12dp"
-            android:src="@drawable/dinamic_small"
-            android:layout_marginEnd="50dp"/>
-
-        <ImageButton
-            android:id="@+id/plusButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="end|center_vertical"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Добавить"
-            android:padding="12dp"
-            android:src="@drawable/plus_small" />
     </FrameLayout>
 
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerPets"
+        android:id="@+id/recyclerFeeding"
         android:layout_width="match_parent"
         android:layout_height="490dp"
         android:layout_weight="1" />
@@ -85,11 +64,9 @@
 
         <ImageButton
             android:id="@+id/btnUser"
-            android:clickable="true"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_weight="1"
-            android:layout_gravity="end|center_vertical"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/user_small"
             android:scaleType="centerInside"

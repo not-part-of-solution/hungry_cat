@@ -19,6 +19,10 @@ interface FeedingDao {
     @Query("SELECT * FROM feeding_times WHERE pet_id = :petId")
     fun getFeederTimesForPet(petId: Int): Flow<List<FeedingTime>>
 
+    @Query("SELECT * FROM feeding_times WHERE pet_id = :petId")
+    suspend fun getFeedingTimesByPetId(petId: Long): List<FeedingTime>
+
+
     @Transaction
     @Query("""
         SELECT 

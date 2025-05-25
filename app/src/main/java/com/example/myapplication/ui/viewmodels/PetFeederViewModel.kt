@@ -44,6 +44,9 @@ class PetFeederViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    suspend fun getFeedingTimesByPetId(petId: Long): List<FeedingTime>{
+        return repository.getFeedingTimesByPetId(petId)
+    }
     fun getPetsByUser(userId: Long): Flow<List<Pet>> = repository.getPetsByUser(userId)
 
     suspend fun getPetById(petId: Long): Pet? {

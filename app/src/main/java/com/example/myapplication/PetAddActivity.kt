@@ -45,7 +45,7 @@ class PetAddActivity : AppCompatActivity() {
             val item = times[position]
             holder.tvTime.text = item.time
             holder.tvPortions.text = "${item.portions} порций"
-            holder.ivBone.visibility = if (item.portions > 5) View.VISIBLE else View.GONE
+            holder.ivBone.visibility = View.VISIBLE
             holder.btnDelete.setOnClickListener { onDeleteClick(item) }
         }
 
@@ -67,19 +67,21 @@ class PetAddActivity : AppCompatActivity() {
 
     private fun showPortionsDialog(time: String) {
         AlertDialog.Builder(this)
-            .setTitle("Количество грамм для $time")
+            .setTitle("Количество порций для $time")
             .setItems(
                 arrayOf(
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9",
                     "10",
-                    "20",
-                    "30",
-                    "40",
-                    "50",
-                    "60",
-                    "70",
-                    "80",
-                    "90",
-                    "100"
+                    "11",
+                    "12"
                 )
             ) { _, which ->
                 val portions = if (which == 5) 6 else which + 1
@@ -192,7 +194,6 @@ class PetAddActivity : AppCompatActivity() {
                     try {
                         val userId = viewModel.getCurrentUserId()
 
-                        // ✅ Проверка, что userId корректен
                         if (userId <= 0) {
                             Toast.makeText(
                                 this@PetAddActivity,
@@ -216,13 +217,29 @@ class PetAddActivity : AppCompatActivity() {
                             viewModel.saveFeederTimes(feederTimes)
 
                             runOnUiThread {
-                                Toast.makeText(
-                                    this@PetAddActivity,
-                                    "$name сохранён!",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                val dialogView = LayoutInflater.from(this@PetAddActivity).inflate(R.layout.dialog_window, null)
+
+                                val tvnamePet = dialogView.findViewById<TextView>(R.id.tvnamePet)
+                                val tvValue = dialogView.findViewById<TextView>(R.id.tvValue)
+                                val tvFeeding = dialogView.findViewById<TextView>(R.id.tvtimeForFood)
+                                val btnOk = dialogView.findViewById<Button>(R.id.btnDialogOk)
+
+                                tvnamePet.text = "Имя: $name"
+                                tvValue.text = "Вес: $weight кг"
+                                tvFeeding.text = "Времён кормления: ${feedingTimes.size}"
+
+                                val dialog = AlertDialog.Builder(this@PetAddActivity)
+                                    .setView(dialogView)
+                                    .setCancelable(false)
+                                    .create()
+
+                                btnOk.setOnClickListener {
+                                    dialog.dismiss()
+                                    finish()
+                                }
+
+                                dialog.show()
                             }
-                            finish()
                         } else {
                             runOnUiThread {
                                 Toast.makeText(

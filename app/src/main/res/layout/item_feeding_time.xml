@@ -35,5 +35,6 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:src="@drawable/cancel"
+        android:text = "Отмена"
         android:background="?attr/selectableItemBackgroundBorderless"/>
 </LinearLayout>

@@ -27,6 +27,10 @@ class PetFeederRepository(
         return petDao.insert(Pet(userId = userId, name = name, weight = weight, google_drive_link = googleDriveLink))
     }
 
+    suspend fun getFeedingTimesByPetId(petId: Long): List<FeedingTime> {
+        return feedingDao.getFeedingTimesByPetId(petId)
+    }
+
     // Получение всех питомцев пользователя
     fun getPetsByUser(userId: Long): Flow<List<Pet>> {
         return petDao.getPetsByUser(userId)

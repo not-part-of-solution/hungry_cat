@@ -1,9 +1,10 @@
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="#791c45"> <!-- Цвет ripple-эффекта -->
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="#FFC1D7"/> <!-- Цвет фона -->
-            <corners android:radius="24dp"/> <!-- Закругление углов -->
-        </shape>
-    </item>
-</ripple>
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Цвет фона карточки -->
+    <solid android:color="#FFB6C1" /> <!-- мягкий розовый -->
+
+    <!-- Скругление углов -->
+    <corners android:radius="16dp" />
+</shape>
