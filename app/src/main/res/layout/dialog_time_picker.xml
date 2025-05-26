@@ -2,26 +2,87 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/login_round"
-    android:padding="16dp">
+    android:background="@drawable/bg_dialog_rounded"
+    android:padding="24dp">
 
-    <NumberPicker
-        android:id="@+id/hourPicker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+    <!-- Заголовок -->
     <TextView
+        android:id="@+id/tvTimeChange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=":"
-        android:textSize="24sp"
-        android:layout_marginHorizontal="8dp" />
+        android:gravity="center"
+        android:text="Выберите время кормления"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/round_let"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="16dp" />
 
-    <NumberPicker
-        android:id="@+id/minutePicker"
+    <!-- Выбор времени -->
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="24dp">
 
+        <NumberPicker
+            android:id="@+id/hourPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="20sp"
+            android:layout_marginHorizontal="4dp" />
+
+        <NumberPicker
+            android:id="@+id/minutePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Кнопки -->
+    <LinearLayout
+        android:id="@+id/dialogButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="ОТМЕНА"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:backgroundTint="#E0E0E0"
+            android:textColor="@android:color/black"
+            android:layout_marginEnd="8dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="8dp"/>
+
+        <Button
+            android:id="@+id/btnOk"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="ОК"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:backgroundTint="#F16096"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="8dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="8dp"/>
+    </LinearLayout>
 </LinearLayout>

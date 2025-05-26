@@ -15,6 +15,7 @@ import com.example.myapplication.data.entities.Pet
 import com.example.myapplication.data.entities.FeedingTime
 import com.example.myapplication.ui.viewmodels.PetFeederViewModel
 import kotlinx.coroutines.launch
+import android.view.WindowManager
 import java.util.*
 
 class PetAddActivity : AppCompatActivity() {
@@ -133,6 +134,8 @@ class PetAddActivity : AppCompatActivity() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_time_picker, null)
         val hourPicker = dialogView.findViewById<NumberPicker>(R.id.hourPicker)
         val minutePicker = dialogView.findViewById<NumberPicker>(R.id.minutePicker)
+        val btnOk = dialogView.findViewById<Button>(R.id.btnOk)
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
 
         hourPicker.minValue = 0
         hourPicker.maxValue = 23
@@ -146,17 +149,29 @@ class PetAddActivity : AppCompatActivity() {
         hourPicker.value = calendar.get(Calendar.HOUR_OF_DAY)
         minutePicker.value = calendar.get(Calendar.MINUTE)
 
-        AlertDialog.Builder(this)
-            .setTitle("Выберите время кормления")
+        val dialog = AlertDialog.Builder(this, R.style.RoundedAlertDialog)
             .setView(dialogView)
-            .setPositiveButton("OK") { _, _ ->
-                val hour = hourPicker.value
-                val minute = minutePicker.value
-                val time = String.format("%02d:%02d", hour, minute)
-                showPortionsDialog(time)
-            }
-            .setNegativeButton("Отмена", null)
-            .show()
+            .setCancelable(false)
+            .create()
+
+        btnOk.setOnClickListener {
+            val hour = hourPicker.value
+            val minute = minutePicker.value
+            val time = String.format("%02d:%02d", hour, minute)
+            showPortionsDialog(time)
+            dialog.dismiss()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.85).toInt(),
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
     }
 
 
