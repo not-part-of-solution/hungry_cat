@@ -76,6 +76,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
 
+    implementation ("com.android.volley:volley:1.2.1")
+
     // Compose
     implementation(platform(libs.androidx.compose.bom))
 
@@ -118,5 +120,6 @@ dependencies {
     implementation("androidx.camera:camera-core:$cameraxVersion")
     implementation("androidx.camera:camera-camera2:$cameraxVersion")
     implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation ("androidx.camera:camera-view:1.0.0-alpha32")
     implementation("androidx.camera:camera-view:$cameraxVersion")
 }

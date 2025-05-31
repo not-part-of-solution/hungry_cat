@@ -1,11 +1,18 @@
 package com.example.myapplication
 
 import android.os.Bundle
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import com.example.myapplication.data.AppDatabase
+import com.example.myapplication.data.entities.FeedingTime
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import android.widget.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class UserActivity : AppCompatActivity() {
 
@@ -14,24 +21,44 @@ class UserActivity : AppCompatActivity() {
     private lateinit var layoutAchievements: LinearLayout
     private lateinit var layoutActivity: LinearLayout
 
+    private lateinit var db: AppDatabase
+    private var petId: Long = 1 // <-- замените на реальный ID из Intent или SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user)
 
-        // Инициализация элементов
         initViews()
-
-        // Настройка Toolbar
         setupToolbar()
 
-        // Загрузка данных
+        // Получаем из SharedPreferences
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val petName = prefs.getString("PET_NAME", "Безымянный")
+        petId = prefs.getLong("PET_ID", 1L)
+
+        findViewById<TextView>(R.id.tvPetName).text = petName
+
+        db = AppDatabase.getDatabase(this)
         loadData()
 
-        // Настройка кнопки кормления
         fabFeed.setOnClickListener {
+            val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+
+            val feeding = FeedingTime(
+                pet_id = petId,
+                time = currentTime,
+                portions = 1
+            )
+
+            lifecycleScope.launch {
+                db.feedingDao().insert(feeding)
+            }
+
             Toast.makeText(this, "Питомец покормлен!", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 
     private fun initViews() {
         toolbar = findViewById(R.id.toolbar)
@@ -42,12 +69,12 @@ class UserActivity : AppCompatActivity() {
 
     private fun setupToolbar() {
         toolbar.setNavigationOnClickListener {
-            finish() // Закрываем активность при нажатии "Назад"
+            finish()
         }
     }
 
     private fun loadData() {
-        // Заполняем достижения
+        // Заполняем достижения (пока статично)
         val achievements = listOf(
             Achievement("Новичок", R.drawable.bone_small),
             Achievement("Гурман", R.drawable.bone_small)
@@ -60,24 +87,24 @@ class UserActivity : AppCompatActivity() {
             layoutAchievements.addView(view)
         }
 
-        // Заполняем активность
-        val activities = listOf(
-            "Покормлен в 08:30",
-            "Покормлен в 12:45",
-            "Покормлен в 18:20"
-        )
+        // Загружаем активности кормления из БД
+        lifecycleScope.launch {
+            db.feedingDao().getFeederTimesForPet(petId.toInt()).collectLatest { feedings ->
+                layoutActivity.removeAllViews()
 
-        activities.forEach { activity ->
-            val textView = TextView(this).apply {
-                text = activity
-                setCompoundDrawablesWithIntrinsicBounds(
-                    ContextCompat.getDrawable(this@UserActivity, R.drawable.pet_food_small),
-                    null, null, null
-                )
-                compoundDrawablePadding = 16
-                setPadding(0, 8, 0, 8)
+                feedings.forEach { feeding ->
+                    val textView = TextView(this@UserActivity).apply {
+                        text = "Покормлен в ${feeding.time} (${feeding.portions} порций)"
+                        setCompoundDrawablesWithIntrinsicBounds(
+                            ContextCompat.getDrawable(this@UserActivity, R.drawable.pet_food_small),
+                            null, null, null
+                        )
+                        compoundDrawablePadding = 16
+                        setPadding(0, 8, 0, 8)
+                    }
+                    layoutActivity.addView(textView)
+                }
             }
-            layoutActivity.addView(textView)
         }
     }
 

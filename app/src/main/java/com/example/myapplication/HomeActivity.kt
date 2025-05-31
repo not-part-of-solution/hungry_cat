@@ -15,6 +15,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import android.util.Size
+import androidx.camera.core.ImageAnalysis
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var cameraExecutor: ExecutorService
@@ -72,12 +74,21 @@ class HomeActivity : AppCompatActivity() {
                 it.setSurfaceProvider(previewView.surfaceProvider)
             }
 
+            val imageAnalyzer = ImageAnalysis.Builder()
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .setTargetResolution(Size(224, 224)) // размер под модель
+                .build()
+                .also {
+                    it.setAnalyzer(cameraExecutor, FrameAnalyzer(this)) // 👈 FrameAnalyzer обрабатывает кадры
+                }
+
             try {
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
                     this,
                     CameraSelector.DEFAULT_BACK_CAMERA,
-                    preview
+                    preview,
+                    imageAnalyzer // 👈 передаём в bind
                 )
             } catch (e: Exception) {
                 Toast.makeText(this, "Ошибка камеры: ${e.message}", Toast.LENGTH_SHORT).show()

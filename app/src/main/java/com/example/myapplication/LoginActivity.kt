@@ -17,6 +17,11 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 🧹 Очищаем предыдущую сессию при попадании на экран логина
+        val prefs = getSharedPreferences("session", MODE_PRIVATE)
+        prefs.edit().clear().apply()
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -33,6 +38,7 @@ class LoginActivity : AppCompatActivity() {
         setupObservers()
         checkAutoLogin()
     }
+
 
     private fun setupViews() {
         binding.apply {
@@ -73,8 +79,8 @@ class LoginActivity : AppCompatActivity() {
                 showError("Введите корректный email")
                 false
             }
-            password.length < 6 -> {
-                showError("Пароль должен содержать минимум 6 символов")
+            password.length < 8 -> {
+                showError("Пароль должен содержать минимум 8 символов")
                 false
             }
             else -> true

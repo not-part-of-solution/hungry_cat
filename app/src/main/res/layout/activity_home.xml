@@ -6,17 +6,19 @@
     android:padding="16dp"
     android:background="#3F3F3F">
 
-    <!-- PreviewView для камеры -->
+    <!-- 📸 Камера -->
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
         android:layout_width="match_parent"
-        android:layout_height="250dp" />
+        android:layout_height="250dp"
+        android:layout_marginBottom="16dp" />
 
+    <!-- 🐾 Кнопки Устройства и Питомцы -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center_horizontal">
 
         <Button
             android:id="@+id/btnDevice"
@@ -28,8 +30,9 @@
             android:drawablePadding="8dp"
             android:fontFamily="@font/round_let"
             android:hint="Устройства"
-            android:paddingLeft="8dp"
-            android:textSize="20sp" />
+            android:paddingStart="8dp"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/btnPet"
@@ -41,39 +44,44 @@
             android:drawablePadding="8dp"
             android:fontFamily="@font/round_let"
             android:hint="Питомцы"
-            android:paddingLeft="8dp"
-            android:textSize="20sp" />
+            android:paddingStart="8dp"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
+    <!-- 🧱 Пустое пространство (выталкивает нижнюю панель вниз) -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
+    <!-- 🧭 Нижняя панель навигации -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="12dp">
 
         <ImageButton
             android:id="@+id/btnHome"
-            android:layout_width="16dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
-            android:background="@null"
             android:layout_weight="1"
+            android:background="@null"
             android:src="@drawable/home_small"
             android:scaleType="fitCenter"
-            android:contentDescription="Кнопка пользователя"/>
+            android:contentDescription="Домой" />
 
         <ImageButton
             android:id="@+id/btnUser"
-            android:layout_width="16dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@null"
             android:src="@drawable/user_small"
             android:scaleType="fitCenter"
-            android:contentDescription="Кнопка пользователя"/>
+            android:contentDescription="Профиль" />
     </LinearLayout>
 </LinearLayout>

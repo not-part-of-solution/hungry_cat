@@ -82,8 +82,8 @@ class RegisterActivity : AppCompatActivity() {
                 showError("Введите корректный email")
                 false
             }
-            password.length < 6 -> {
-                showError("Пароль должен содержать минимум 6 символов")
+            password.length < 8 -> {
+                showError("Пароль должен содержать минимум 8 символов")
                 false
             }
             password != confirmPassword -> {
