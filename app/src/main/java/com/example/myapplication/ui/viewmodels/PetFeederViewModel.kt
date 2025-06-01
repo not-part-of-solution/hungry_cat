@@ -25,7 +25,7 @@ class PetFeederViewModel(application: Application) : AndroidViewModel(applicatio
         return try {
             val userId = repository.registerUser(name, email, password)
             synchronized(prefsLock) {
-                prefs.edit().putLong("current_user_id", userId).apply()  // ✅ сохраняем
+                prefs.edit().putLong("current_user_id", userId).apply()  //  сохраняем
             }
             Result.success(userId)
         } catch (e: Exception) {

@@ -34,7 +34,7 @@ class PetActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[PetFeederViewModel::class.java]
 
         // Инициализация адаптера и списка питомцев
-        adapter = PetAdapter() // 👈 адаптер без статистических кнопок
+        adapter = PetAdapter() // адаптер без статистических кнопок
 
         recyclerView = findViewById(R.id.recyclerPets)
         recyclerView.layoutManager = LinearLayoutManager(this)
